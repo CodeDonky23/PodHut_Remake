@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Heart, User, LogOut, Menu, X } from "lucide-react";
+import { Heart, User, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -54,9 +54,6 @@ export function Header() {
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
-          <Link to="/search" className="icon-button">
-            <Search className="w-5 h-5" />
-          </Link>
 
           {isAuthenticated ? (
             <DropdownMenu>
