@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, User, LogOut, Menu, X } from "lucide-react";
+import { Heart, User, LogOut, Menu, X, Compass } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,59 +20,62 @@ export function Header() {
   const location = useLocation();
 
   const navLinks = [
-    { to: "/", label: "Discover" },
-    { to: "/favourites", label: "Favourites" },
+    { to: "/", label: "Discover", icon: Compass },
+    { to: "/favourites", label: "Favourites", icon: Heart },
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50">
-      <div className="container flex items-center justify-between h-16 px-4">
+      <div className="container flex items-center justify-between h-18 py-3 px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">P</span>
-          </div>
-          <span className="font-bold text-xl gradient-text hidden sm:block">PodHut</span>
+        <Link to="/" className="flex items-center">
+          <Logo size="sm" showText />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive(link.to)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full px-2 py-1">
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  isActive(link.to)
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
 
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="icon-button">
-                  <User className="w-5 h-5" />
+                <button className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-medium text-sm shadow-md hover:shadow-lg transition-shadow">
+                  {user?.email?.charAt(0).toUpperCase() || "U"}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <div className="px-2 py-2">
-                  <p className="text-sm font-medium">{user?.email}</p>
+                <div className="px-3 py-2">
+                  <p className="text-sm font-medium truncate">{user?.email}</p>
+                  <p className="text-xs text-muted-foreground">Signed in</p>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/favourites" className="cursor-pointer">
                     <Heart className="w-4 h-4 mr-2" />
-                    Favourites
+                    My Favourites
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -85,7 +90,7 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Link to="/auth">
-              <Button size="sm" className="gradient-primary text-primary-foreground">
+              <Button size="sm" className="gradient-primary text-primary-foreground rounded-full px-5 shadow-md hover:shadow-lg transition-shadow">
                 Sign In
               </Button>
             </Link>
@@ -108,23 +113,27 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border/50 bg-card"
+            className="md:hidden border-t border-border/50 bg-card/95 backdrop-blur-xl"
           >
             <div className="container py-4 px-4 flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    isActive(link.to)
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      isActive(link.to)
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
           </motion.nav>
         )}

@@ -190,7 +190,7 @@
   /* Audio player bar */
   .player-bar {
     @apply fixed bottom-0 left-0 right-0 glass-card border-t border-border/50 z-50;
-    background: linear-gradient(180deg, hsl(0, 0%, 8%), hsl(0, 0%, 5%));
+    background: linear-gradient(180deg, hsl(var(--card)), hsl(var(--background)));
     backdrop-filter: blur(20px);
   }
 
