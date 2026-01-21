@@ -7,10 +7,13 @@ import { ShowCarousel } from "@/components/ShowCarousel";
 import { GenreFilter } from "@/components/GenreFilter";
 import { SortDropdown } from "@/components/SortDropdown";
 import { SearchInput } from "@/components/SearchInput";
+import { ContinueListening } from "@/components/ContinueListening";
+import { StatsBar } from "@/components/StatsBar";
 import { useShows } from "@/hooks/usePodcasts";
+import { GENRE_MAP } from "@/types/podcast";
 import type { SortOption, ShowPreview } from "@/types/podcast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Headphones } from "lucide-react";
+import { Headphones, Sparkles } from "lucide-react";
 
 const Index = () => {
   const { data: shows, isLoading, error } = useShows();
@@ -49,6 +52,7 @@ const Index = () => {
   }, [shows, searchQuery, selectedGenres, sortOption, fuse]);
 
   const featuredShows = useMemo(() => shows?.slice(0, 8) ?? [], [shows]);
+  const totalGenres = Object.keys(GENRE_MAP).length;
 
   const toggleGenre = (genreId: number) => {
     setSelectedGenres((prev) =>
@@ -70,18 +74,35 @@ const Index = () => {
     <Layout>
       <div className="container py-8 space-y-10">
         {/* Hero */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-            <Headphones className="w-4 h-4" />
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="text-center py-8"
+        >
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20"
+          >
+            <Sparkles className="w-4 h-4" />
             <span>Discover Amazing Podcasts</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Welcome to <span className="gradient-text">PodHut</span>
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            Welcome to <span className="gradient-text-hero">PodHut</span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
             Your premium destination for discovering, listening, and tracking your favorite podcasts.
           </p>
+
+          {/* Stats */}
+          {!isLoading && shows && (
+            <StatsBar totalShows={shows.length} totalGenres={totalGenres} />
+          )}
         </motion.section>
+
+        {/* Continue Listening */}
+        <ContinueListening />
 
         {/* Featured Carousel */}
         {isLoading ? (
@@ -103,22 +124,48 @@ const Index = () => {
 
         {/* Shows Grid */}
         <section>
-          <h2 className="text-xl font-bold mb-6">
-            {searchQuery || selectedGenres.length > 0 ? `${filteredShows.length} Results` : "All Shows"}
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Headphones className="w-5 h-5 text-primary" />
+              {searchQuery || selectedGenres.length > 0 ? `${filteredShows.length} Results` : "All Shows"}
+            </h2>
+            {filteredShows.length > 0 && (
+              <span className="text-sm text-muted-foreground">
+                {filteredShows.length} podcast{filteredShows.length !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+
           {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {[...Array(10)].map((_, i) => (
-                <div key={i} className="glass-card p-4 space-y-3">
-                  <Skeleton className="aspect-square w-full rounded-lg" />
-                  <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
+                <div key={i} className="glass-card overflow-hidden">
+                  <Skeleton className="aspect-square w-full" />
+                  <div className="p-4 space-y-3">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-5 w-1/3" />
+                  </div>
                 </div>
               ))}
             </div>
+          ) : filteredShows.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-16"
+            >
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Headphones className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-medium mb-2">No podcasts found</h3>
+              <p className="text-muted-foreground">Try adjusting your search or filters</p>
+            </motion.div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {filteredShows.map((show, index) => <ShowCard key={show.id} show={show} index={index} />)}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 auto-rows-fr">
+              {filteredShows.map((show, index) => (
+                <ShowCard key={show.id} show={show} index={index} />
+              ))}
             </div>
           )}
         </section>
