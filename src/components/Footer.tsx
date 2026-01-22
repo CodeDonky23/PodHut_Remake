@@ -87,14 +87,12 @@ export function Footer() {
           className="border-t border-border/50 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <p className="text-sm text-muted-foreground flex items-center gap-1">
-            Made with{" "}
+            Made by Mogamat Smith
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <Heart className="w-4 h-4 text-primary" fill="currentColor" />
             </motion.span>{" "}
-            for podcast lovers
           </p>
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} PodHut. All rights reserved.
