@@ -27,30 +27,53 @@ export function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50">
+    <motion.header 
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50"
+    >
       <div className="container flex items-center justify-between h-18 py-3 px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <Logo size="sm" showText />
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Logo size="sm" showText />
+          </motion.div>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full px-2 py-1">
-          {navLinks.map((link) => {
+          {navLinks.map((link, index) => {
             const Icon = link.icon;
+            const active = isActive(link.to);
             return (
-              <Link
+              <motion.div
                 key={link.to}
-                to={link.to}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  isActive(link.to)
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <Icon className="w-4 h-4" />
-                {link.label}
-              </Link>
+                <Link
+                  to={link.to}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    active
+                      ? "text-primary-foreground shadow-md"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 bg-primary rounded-full"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Icon className="w-4 h-4" />
+                    {link.label}
+                  </span>
+                </Link>
+              </motion.div>
             );
           })}
         </nav>
@@ -138,6 +161,6 @@ export function Header() {
           </motion.nav>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }
