@@ -60,33 +60,62 @@ export function EpisodeCard({ episode, season, show, episodeIndex }: EpisodeCard
 
   return (
     <motion.article
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: episodeIndex * 0.03 }}
-      className={`glass-card p-4 flex gap-4 group cursor-pointer transition-all duration-200 ${
-        isCurrentEpisode ? "border-primary/50 bg-primary/5" : "hover:border-border/80"
+      initial={{ opacity: 0, x: -30, scale: 0.95 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ 
+        delay: episodeIndex * 0.05,
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }}
+      whileHover={{ 
+        x: 8,
+        backgroundColor: "hsl(var(--card))",
+        borderColor: "hsl(var(--primary) / 0.3)",
+        boxShadow: "0 10px 40px -15px hsl(var(--primary) / 0.2)"
+      }}
+      whileTap={{ scale: 0.98 }}
+      className={`glass-card p-4 flex gap-4 group cursor-pointer ${
+        isCurrentEpisode ? "border-primary/50 bg-primary/5" : ""
       }`}
       onClick={handlePlay}
     >
       {/* Episode Number & Play */}
       <div className="relative shrink-0">
-        <div
-          className={`w-12 h-12 rounded-lg flex items-center justify-center font-medium transition-all duration-200 ${
+        <motion.div
+          className={`w-12 h-12 rounded-lg flex items-center justify-center font-medium ${
             isCurrentEpisode
               ? "gradient-primary text-primary-foreground"
-              : "bg-secondary text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground"
+              : "bg-secondary text-muted-foreground"
           }`}
+          whileHover={{ 
+            scale: 1.1,
+            backgroundColor: "hsl(var(--primary))",
+            color: "hsl(var(--primary-foreground))"
+          }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
-          {isCurrentEpisode && isPlaying ? (
-            <Pause className="w-5 h-5" />
-          ) : (
-            <Play className="w-5 h-5 ml-0.5" />
-          )}
-        </div>
+          <motion.div
+            animate={isCurrentEpisode && isPlaying ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.5, repeat: isCurrentEpisode && isPlaying ? Infinity : 0 }}
+          >
+            {isCurrentEpisode && isPlaying ? (
+              <Pause className="w-5 h-5" />
+            ) : (
+              <Play className="w-5 h-5 ml-0.5" />
+            )}
+          </motion.div>
+        </motion.div>
         {isCompleted && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+          <motion.div 
+            className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+          >
             <Check className="w-3 h-3 text-white" />
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -94,34 +123,49 @@ export function EpisodeCard({ episode, season, show, episodeIndex }: EpisodeCard
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <h4 className="font-medium line-clamp-1 group-hover:text-primary transition-colors">
+            <motion.h4 
+              className="font-medium line-clamp-1 transition-colors"
+              whileHover={{ color: "hsl(var(--primary))" }}
+            >
               Episode {episode.episode}: {episode.title}
-            </h4>
+            </motion.h4>
             <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
               {episode.description}
             </p>
           </div>
 
           {isAuthenticated && (
-            <button
+            <motion.button
               onClick={handleToggleFavourite}
               className={`favourite-button shrink-0 ${isFav ? "favourite-button-active" : ""}`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.85 }}
+              animate={isFav ? { scale: [1, 1.3, 1] } : {}}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <Heart className="w-5 h-5" />
-            </button>
+            </motion.button>
           )}
         </div>
 
         {/* Progress bar */}
         {progressPercent > 0 && !isCompleted && (
-          <div className="mt-3">
+          <motion.div 
+            className="mt-3"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ delay: 0.2 }}
+            style={{ originX: 0 }}
+          >
             <div className="progress-track">
-              <div
+              <motion.div
                 className="progress-fill"
-                style={{ width: `${progressPercent}%` }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
               />
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </motion.article>

@@ -46,19 +46,24 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
 
   return (
     <motion.nav
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 15 }}
       className="flex items-center justify-center gap-2 mt-8"
       aria-label="Pagination"
     >
       {/* Previous Button */}
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <motion.div 
+        whileHover={{ scale: 1.1, x: -2 }} 
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+      >
         <Button
           variant="outline"
           size="icon"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-10 w-10 rounded-full border-border/50 hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50"
+          className="h-10 w-10 rounded-full border-border/50 hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50 transition-all duration-300"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -68,14 +73,22 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <div className="flex items-center gap-1">
         {visiblePages.map((page, index) => (
           page === "ellipsis" ? (
-            <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
+            <motion.span 
+              key={`ellipsis-${index}`} 
+              className="px-2 text-muted-foreground"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               <MoreHorizontal className="w-4 h-4" />
-            </span>
+            </motion.span>
           ) : (
             <motion.div
               key={page}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05, type: "spring", stiffness: 300 }}
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.9 }}
             >
               <Button
                 variant={currentPage === page ? "default" : "ghost"}
@@ -83,11 +96,18 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
                 onClick={() => onPageChange(page)}
                 className={`h-10 w-10 rounded-full font-medium transition-all duration-300 ${
                   currentPage === page
-                    ? "gradient-primary text-primary-foreground shadow-md"
+                    ? "gradient-primary text-primary-foreground shadow-lg"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
-                {page}
+                {currentPage === page && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full gradient-primary"
+                    layoutId="pagination-active"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                <span className="relative z-10">{page}</span>
               </Button>
             </motion.div>
           )
@@ -95,13 +115,17 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       </div>
 
       {/* Next Button */}
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <motion.div 
+        whileHover={{ scale: 1.1, x: 2 }} 
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+      >
         <Button
           variant="outline"
           size="icon"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-10 w-10 rounded-full border-border/50 hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50"
+          className="h-10 w-10 rounded-full border-border/50 hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50 transition-all duration-300"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

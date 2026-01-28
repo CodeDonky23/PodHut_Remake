@@ -84,15 +84,17 @@ export function AudioPlayer() {
   return (
     <motion.div
       className="player-bar"
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", damping: 20 }}
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
     >
       {/* Progress bar at top */}
-      <div className="h-1 bg-secondary">
-        <div
-          className="h-full gradient-primary transition-all duration-100"
-          style={{ width: `${progress}%` }}
+      <div className="h-1 bg-secondary overflow-hidden">
+        <motion.div
+          className="h-full gradient-primary"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.1, ease: "linear" }}
         />
       </div>
 
@@ -100,11 +102,18 @@ export function AudioPlayer() {
         {/* Compact Player */}
         <div className="flex items-center gap-4 h-20">
           {/* Episode Info */}
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <img
+          <motion.div 
+            className="flex items-center gap-3 flex-1 min-w-0"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <motion.img
               src={season.image || ('image' in show ? show.image : '')}
               alt={episode.title}
               className="w-12 h-12 rounded-lg object-cover shrink-0"
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             />
             <div className="min-w-0">
               <p className="font-medium text-sm line-clamp-1">{episode.title}</p>
@@ -112,44 +121,81 @@ export function AudioPlayer() {
                 {show.title} • S{season.season}
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Controls */}
           <div className="flex items-center gap-2">
-            <button
+            <motion.button
               onClick={skipBackward}
               className="icon-button hidden sm:flex"
               title="Back 15 seconds"
+              whileHover={{ scale: 1.15, rotate: -10 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400 }}
             >
               <RotateCcw className="w-5 h-5" />
-            </button>
+            </motion.button>
 
-            <button onClick={previousEpisode} className="icon-button hidden sm:flex">
+            <motion.button 
+              onClick={previousEpisode} 
+              className="icon-button hidden sm:flex"
+              whileHover={{ scale: 1.15, x: -3 }}
+              whileTap={{ scale: 0.9 }}
+            >
               <SkipBack className="w-5 h-5" />
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               onClick={isPlaying ? pause : resume}
               className="play-button"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              {isPlaying ? (
-                <Pause className="w-5 h-5 text-primary-foreground" />
-              ) : (
-                <Play className="w-5 h-5 text-primary-foreground ml-0.5" />
-              )}
-            </button>
+              <AnimatePresence mode="wait">
+                {isPlaying ? (
+                  <motion.div
+                    key="pause"
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    exit={{ scale: 0, rotate: 90 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Pause className="w-5 h-5 text-primary-foreground" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="play"
+                    initial={{ scale: 0, rotate: 90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    exit={{ scale: 0, rotate: -90 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Play className="w-5 h-5 text-primary-foreground ml-0.5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
 
-            <button onClick={nextEpisode} className="icon-button hidden sm:flex">
+            <motion.button 
+              onClick={nextEpisode} 
+              className="icon-button hidden sm:flex"
+              whileHover={{ scale: 1.15, x: 3 }}
+              whileTap={{ scale: 0.9 }}
+            >
               <SkipForward className="w-5 h-5" />
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               onClick={skipForward}
               className="icon-button hidden sm:flex"
               title="Forward 15 seconds"
+              whileHover={{ scale: 1.15, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400 }}
             >
               <RotateCw className="w-5 h-5" />
-            </button>
+            </motion.button>
           </div>
 
           {/* Time & Actions */}
@@ -193,12 +239,16 @@ export function AudioPlayer() {
 
             {/* Favourite */}
             {isAuthenticated && (
-              <button
+              <motion.button
                 onClick={handleToggleFavourite}
                 className={`favourite-button ${isFav ? "favourite-button-active" : ""}`}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.85 }}
+                animate={isFav ? { scale: [1, 1.3, 1] } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <Heart className="w-5 h-5" />
-              </button>
+              </motion.button>
             )}
 
             {/* Expand */}

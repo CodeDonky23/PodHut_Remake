@@ -28,15 +28,19 @@ export function Header() {
 
   return (
     <motion.header 
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.1 }}
       className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50"
     >
       <div className="container flex items-center justify-between h-18 py-3 px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.div 
+            whileHover={{ scale: 1.05, rotate: -2 }} 
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
             <Logo size="sm" showText />
           </motion.div>
         </Link>
