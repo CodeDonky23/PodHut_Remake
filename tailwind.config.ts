@@ -114,16 +114,50 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        },
+        "slide-in-left": {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px -5px hsl(24, 95%, 53%, 0.4), 0 0 40px -10px hsl(38, 92%, 50%, 0.3)"
+          },
+          "50%": { 
+            boxShadow: "0 0 40px -5px hsl(24, 95%, 53%, 0.6), 0 0 60px -10px hsl(38, 92%, 50%, 0.5)"
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-up": "fade-up 0.5s ease-out forwards",
-        "fade-in": "fade-in 0.3s ease-out forwards",
-        "slide-up": "slide-up 0.4s ease-out forwards",
-        "scale-in": "scale-in 0.2s ease-out forwards",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "fade-in": "fade-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "slide-up": "slide-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "scale-in": "scale-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         shimmer: "shimmer 2s linear infinite",
+        float: "float 6s ease-in-out infinite",
+        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
+        wiggle: "wiggle 1s ease-in-out infinite",
+        "slide-in-left": "slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "slide-in-right": "slide-in-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

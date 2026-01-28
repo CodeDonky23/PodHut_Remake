@@ -24,16 +24,40 @@ export function ShowCarousel({ shows, title }: ShowCarouselProps) {
   if (!shows.length) return null;
 
   return (
-    <section className="relative">
+    <motion.section 
+      className="relative"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 15 }}
+    >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">{title}</h2>
+        <motion.h2 
+          className="text-xl font-bold"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          {title}
+        </motion.h2>
         <div className="flex gap-2">
-          <button onClick={() => scroll("left")} className="carousel-nav">
+          <motion.button 
+            onClick={() => scroll("left")} 
+            className="carousel-nav"
+            whileHover={{ scale: 1.1, x: -2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
             <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button onClick={() => scroll("right")} className="carousel-nav">
+          </motion.button>
+          <motion.button 
+            onClick={() => scroll("right")} 
+            className="carousel-nav"
+            whileHover={{ scale: 1.1, x: 2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -45,19 +69,34 @@ export function ShowCarousel({ shows, title }: ShowCarouselProps) {
         {shows.map((show, index) => (
           <motion.div
             key={show.id}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
+            initial={{ opacity: 0, scale: 0.85, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ 
+              delay: index * 0.08,
+              type: "spring",
+              stiffness: 100,
+              damping: 12
+            }}
+            whileHover={{ y: -8 }}
             className="shrink-0 w-[280px] sm:w-[320px]"
             style={{ scrollSnapAlign: "start" }}
           >
             <Link to={`/show/${show.id}`}>
-              <article className="glass-card-hover overflow-hidden group">
+              <motion.article 
+                className="glass-card overflow-hidden group"
+                whileHover={{ 
+                  boxShadow: "0 25px 50px -12px hsl(24 95% 53% / 0.25)",
+                  borderColor: "hsl(var(--primary) / 0.3)"
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
+                  <motion.img
                     src={show.image}
                     alt={show.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -71,17 +110,26 @@ export function ShowCarousel({ shows, title }: ShowCarouselProps) {
                     </p>
                   </div>
 
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center shadow-lg">
-                      <Play className="w-4 h-4 text-primary-foreground ml-0.5" />
-                    </div>
-                  </div>
+                  <motion.div 
+                    className="absolute top-4 right-4"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileHover={{ opacity: 1, scale: 1 }}
+                  >
+                    <motion.div 
+                      className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center shadow-xl"
+                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    >
+                      <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
+                    </motion.div>
+                  </motion.div>
                 </div>
-              </article>
+              </motion.article>
             </Link>
           </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }
