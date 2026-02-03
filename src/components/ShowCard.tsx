@@ -67,15 +67,12 @@ export function ShowCard({ show, index = 0 }: ShowCardProps) {
           }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          {/* Animated glow border on hover */}
-          <motion.div
-            className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none"
+          {/* Animated glow border on hover - only visible on parent hover */}
+          <div
+            className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
             style={{
               background: "linear-gradient(135deg, hsl(24 95% 53% / 0.3) 0%, hsl(38 92% 50% / 0.2) 50%, hsl(24 95% 53% / 0.1) 100%)",
             }}
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
           />
 
           {/* Image container */}
@@ -88,31 +85,15 @@ export function ShowCard({ show, index = 0 }: ShowCardProps) {
               transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               loading="lazy"
             />
-            {/* Gradient overlay */}
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            />
+            {/* Gradient overlay - only on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
-            {/* Play button overlay */}
-            <motion.div 
-              className="absolute inset-0 flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center shadow-2xl"
-                initial={{ scale: 0.5, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              >
+            {/* Play button overlay - only on hover */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center shadow-2xl transform scale-75 group-hover:scale-100 transition-transform duration-300">
                 <Play className="w-7 h-7 text-primary-foreground ml-1" fill="currentColor" />
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* Season badge */}
             <motion.div 
