@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { GENRE_MAP } from "@/types/podcast";
 
 interface GenreFilterProps {
@@ -44,18 +44,9 @@ export function GenreFilter({ selectedGenres, onToggleGenre }: GenreFilterProps)
         }}
         className={`genre-tag relative overflow-hidden ${selectedGenres.length === 0 ? "genre-tag-active" : ""}`}
       >
-        <AnimatePresence>
-          {selectedGenres.length === 0 && (
-            <motion.span
-              className="absolute inset-0 gradient-primary rounded-full"
-              layoutId="genre-active-bg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            />
-          )}
-        </AnimatePresence>
+        {selectedGenres.length === 0 && (
+          <span className="absolute inset-0 gradient-primary rounded-full" />
+        )}
         <span className="relative z-10">All</span>
       </motion.button>
       
@@ -73,17 +64,9 @@ export function GenreFilter({ selectedGenres, onToggleGenre }: GenreFilterProps)
             onClick={() => onToggleGenre(genreId)}
             className={`genre-tag relative overflow-hidden ${isSelected ? "genre-tag-active" : ""}`}
           >
-            <AnimatePresence>
-              {isSelected && (
-                <motion.span
-                  className="absolute inset-0 gradient-primary rounded-full"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                />
-              )}
-            </AnimatePresence>
+            {isSelected && (
+              <span className="absolute inset-0 gradient-primary rounded-full" />
+            )}
             <span className="relative z-10">{name}</span>
           </motion.button>
         );

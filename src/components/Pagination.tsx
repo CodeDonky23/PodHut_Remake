@@ -94,19 +94,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
                 variant={currentPage === page ? "default" : "ghost"}
                 size="icon"
                 onClick={() => onPageChange(page)}
-                className={`h-10 w-10 rounded-full font-medium transition-all duration-300 ${
+                className={`h-10 w-10 rounded-full font-medium transition-all duration-300 relative ${
                   currentPage === page
                     ? "gradient-primary text-primary-foreground shadow-lg"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
-                {currentPage === page && (
-                  <motion.div
-                    className="absolute inset-0 rounded-full gradient-primary"
-                    layoutId="pagination-active"
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  />
-                )}
                 <span className="relative z-10">{page}</span>
               </Button>
             </motion.div>
